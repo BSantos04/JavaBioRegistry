@@ -1,5 +1,5 @@
 // Create a class for all Species-related functions and variables
-public class Species implements Display{
+public class Species{
     // Create the enums with fixed values for the GenChar parameters
     public enum Category{mammal, bird, reptile, amphibian, fish, insect, arachnid, crustacean, mollusk, annelid, echinoderm, plant, fungus, algae, protist, bacterium, archaeon, virus, unknown}
     public enum ConservationStatus{extinct, endangered, vulnerable, safe, unknown}
@@ -154,7 +154,6 @@ public class Species implements Display{
     }
 
     // Display all the information of a certain species
-    @Override
     public void display(){
         System.out.println();
         System.out.println("Scientific Name: "+getScientificName());

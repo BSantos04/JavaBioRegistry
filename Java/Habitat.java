@@ -1,5 +1,5 @@
 // Create a class for all Habitat-related functions and variables
-public class Habitat implements Display{
+public class Habitat{
     // Create an enum to fix the accepted values for the habitat name
     public enum HabitatName{tundra, grassland, desert, forest, mountain, freshwater, marine, coastal, wetland, rainforest, cave, urban, agricultural, savanna, soil, host, unknown}
 
@@ -83,7 +83,6 @@ public class Habitat implements Display{
     }
 
     // Display the habitat info
-    @Override
     public void display(){
         System.out.println();
         System.out.println("Habitat Name: "+getHabitatName());
