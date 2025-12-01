@@ -130,7 +130,10 @@ public class BiologicalDataBase {
     
     // Export the current data of the database into a CSV file
     public void exportCSV(){
-        try(FileWriter writer = new FileWriter(uniquify("JavaBioDB.csv"))){
+        File folder = new File("JavaBioDBcsv");
+        folder.mkdirs();
+        File csvFile = new File(folder, uniquify("JavaBioDB.csv"));
+        try(FileWriter writer = new FileWriter(csvFile)){
             writer.write("ScientificName,CommonName,Category,ConservationStatus,RecentSightings,HabitatName,Location,Description,Locomotion,Diet,BodyCover,Reproduction\n");
 
             for(Species s: database){
