@@ -132,7 +132,7 @@ public class BiologicalDataBase {
     public void exportCSV(){
         File folder = new File("JavaBioDBcsv");
         folder.mkdirs();
-        File csvFile = new File(folder, uniquify("JavaBioDB.csv"));
+        File csvFile = new File(uniquify(folder+"/JavaBioDB.csv"));
         try(FileWriter writer = new FileWriter(csvFile)){
             writer.write("ScientificName,CommonName,Category,ConservationStatus,RecentSightings,HabitatName,Location,Description,Locomotion,Diet,BodyCover,Reproduction\n");
 
