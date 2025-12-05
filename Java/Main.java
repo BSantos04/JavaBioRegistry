@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Random;
 
 // Create the main class to orchestrate the whole process
 public class Main{
@@ -12,6 +13,13 @@ public class Main{
         // Create a habitat list instance to store the registered habitats
         HabitatList habitatList = new HabitatList();
         boolean bool=true;
+
+        // Set the material to build the IDs
+        String alphabet = "abcdefghijklmnopqrstuvwxyz0123456789";
+        Random r = new Random();
+        String sID;
+        String hID;
+
         System.out.println();
         System.out.println("Oh, hi there.");
 
@@ -22,16 +30,18 @@ public class Main{
         while(bool){
             System.out.println("-Add a species to the database (1);");
             System.out.println("-Add an habitat to the database (2);");
-            System.out.println("-Verify if a species exists in the database by scientific name (3);");
-            System.out.println("-See the number of species from a specific category (4)");
+            System.out.println("-Verify if a species exists in the database (3);");
+            System.out.println("-Show the number of species from a specific category (4)");
             System.out.println("-Show the registered species (5);");
             System.out.println("-Show the total genetic diversity of the database (6);");
-            System.out.println("-Remove species by scientifc name (7) ;");
-            System.out.println("-Get the detailed informations of a species by scientific name (8);");
-            System.out.println("-Show all the species associated with the same habitat (9);");
-            System.out.println("-Show all registered habitats (10);");
-            System.out.println("-Export CSV file with all registered species (11).");
-            System.out.println("-Exit (12).");
+            System.out.println("-Show the detailed informations of a species (7);");
+            System.out.println("-Show all the species associated with the same habitat (8);");
+            System.out.println("-Show all registered habitats (9);");
+            System.out.println("-Remove species (10) ;");
+            System.out.println("-Remove habitat (11) ;");
+            System.out.println("-Export CSV file with all registered species (12).");
+            System.out.println("-Export CSV file with all registered habitats (13).");
+            System.out.println("-Exit (14).");
             System.out.print("Write the number of the activity you want to do: ");
             String choice = in.nextLine().trim();
             switch(choice){
@@ -41,6 +51,26 @@ public class Main{
                     System.out.println("If you want to skip the regist of a certain attribute (from a species or habitat), just press 'Enter'.");
                     System.out.println("Disclaimer: The scientific name field is mandatory!");
                     System.out.println();
+
+                    StringBuilder sb = new StringBuilder();
+                    StringBuilder hb = new StringBuilder();
+                    do{
+                        for(int i=0; i<10; i++){
+                            char c = alphabet.charAt(r.nextInt(alphabet.length()));
+                            sb.append(c);
+                        }
+                        sID = sb.toString();
+                    } while(database.checkSpeciesID(sID));
+
+                    do{
+
+                        for(int i=0; i<10; i++){
+                            char c = alphabet.charAt(r.nextInt(alphabet.length()));
+                            hb.append(c);
+                        }
+                        hID = hb.toString();
+                    } while(habitatList.checkHabitatID(hID));
+
                     // The scientific name field is mandatory, so if no value will be added, a while loop will ask for it again until you input a value
                     boolean tf=true;
                     while(tf){
@@ -84,15 +114,10 @@ public class Main{
                             System.out.print("\nDo you want to add any description to this habitat?\nIf so, write here: ");
                             String description = in.nextLine().trim().toLowerCase();
     
-                            Habitat sHabitat = new Habitat.Builder().habitatName(Habitat.parseHabitatName(hName)).location(location).description(description).build();
+                            Habitat sHabitat = new Habitat.Builder().habitatID(sID).habitatName(Habitat.parseHabitatName(hName)).location(location).description(description).build();
                             GenChar sGenChar = new GenChar.Builder().locomotion(GenChar.parseLocomotion(locomotion)).diet(GenChar.parseDiet(diet)).bodyCover(GenChar.parseBodyCover(bodyCover)).reproduction(GenChar.parseReproduction(reprodcution)).build();
-                            Species species = new Species.Builder().scientificName(sName).commonName(cName).category(Species.parseCategory(cat)).conservationStatus(Species.parseConservationStatus(cStatus)).recentSightings(rSights).habitat(sHabitat).genChar(sGenChar).build();
-                            
-                            if(database.verifyButInBoolean(sName)==true){
-                                System.out.println("This species already exists in this database.");
-                                tf=false;
-                                break;
-                            }
+                            Species species = new Species.Builder().speciesID(hID).scientificName(sName).commonName(cName).category(Species.parseCategory(cat)).conservationStatus(Species.parseConservationStatus(cStatus)).recentSightings(rSights).habitat(sHabitat).genChar(sGenChar).build();
+
                             database.insertSpecies(species);
                             habitatList.addHabitat(sHabitat);
                             tf=false;
@@ -104,6 +129,15 @@ public class Main{
 
                 // If selected '2', it adds a new habitat to the database
                 case "2":
+                    StringBuilder hB = new StringBuilder();
+                    do{
+                        for(int i=0; i<10; i++){
+                            char c = alphabet.charAt(r.nextInt(alphabet.length()));
+                            hB.append(c);
+                        }
+                        hID = hB.toString();
+                    } while(habitatList.checkHabitatID(hID));
+
                     System.out.println("\nAny habitat skipped will be considered 'unknown'!");
                     System.out.print("\nWrite the habitat name (tundra, grassland, desert, forest, mountain, freshwater, marine, coastal, wetland, rainforest, cave, urban, agricultural, savanna, soil, host, unknown): ");
                     String habName = in.nextLine().trim();
@@ -114,7 +148,7 @@ public class Main{
                     System.out.print("\nDo you want to add any description to this habitat?\nIf so, write here: ");
                     String des = in.nextLine().trim();
 
-                    Habitat habit = new Habitat.Builder().habitatName(Habitat.parseHabitatName(habName)).location(local).description(des).build();
+                    Habitat habit = new Habitat.Builder().habitatID(hID).habitatName(Habitat.parseHabitatName(habName)).location(local).description(des).build();
 
                     habitatList.addHabitat(habit);
                     bool=true;
@@ -122,9 +156,9 @@ public class Main{
 
                 // If selected '3', it will check if a certain species exists based on it's scientific name
                 case "3":
-                    System.out.print("\nWrite the scientific name of the species you wanna verify: ");
-                    String nameS = in.nextLine().toLowerCase().trim();
-                    database.verifyByScientificName(nameS);
+                    System.out.print("\nWrite the ID of the species you want to verify: ");
+                    String sId = in.nextLine().toLowerCase().trim();
+                    database.verifyByID(sId);
                     System.out.println();
                     bool=true;
                     break;
@@ -156,12 +190,38 @@ public class Main{
                     bool=true;
                     break;
 
-                // If selected '7', it will remove a species with a certain scientific name
+                // If selected '7', it will display the detailed info of a certain species
                 case "7":
-                    System.out.print("\nWrite the scientific name of the species you want to remove: ");
-                    String Sname = in.nextLine().trim().toLowerCase();
-                    if(database.verifyButInBoolean(Sname)==true){
-                        database.removeSpecies(Sname);
+                    System.out.print("\nWrite the ID of the species you want to find: ");
+                    String Sid = in.nextLine().toLowerCase().trim();
+                    database.obtainDetailedInfo(Sid);
+                    System.out.println();
+                    bool=true;
+                    break;
+
+                // If selected '8', it will display every species from a certain habitat
+                case "8":
+                    System.out.print("\nWrite the name of the habitat you want to search: ");
+                    String habitato = in.nextLine().toLowerCase().trim();
+                    database.associatedByHabitat(habitato);
+                    System.out.println();
+                    bool=true;
+                    break;
+
+                // If selected '9', it will display the detailed info of every registered habitat
+                case "9":
+                    System.out.println();
+                    habitatList.showAllHabitats();
+                    System.out.println();
+                    bool=true;
+                    break;
+
+                // If selected '10', it will remove a species with a certain scientific name
+                case "10":
+                    System.out.print("\nWrite the ID of the species you want to remove: ");
+                    String SID = in.nextLine().trim().toLowerCase();
+                    if(database.verifyButInBoolean(SID)==true){
+                        database.removeSpecies(SID);
                         System.out.println("Species removed successfully.");
                         System.out.println();
                     }
@@ -172,42 +232,40 @@ public class Main{
                     bool=true;
                     break;
 
-                // If selected '8', it will display the detailed info of a certain species
-                case "8":
-                    System.out.print("\nWrite the scientific name of the species you want to find: ");
-                    String scienceName = in.nextLine().toLowerCase().trim();
-                    database.obtainDetailedInfo(scienceName);
-                    System.out.println();
-                    bool=true;
-                    break;
-
-                // If selected '9', it will display every species from a certain habitat
-                case "9":
-                    System.out.print("\nWrite the name of the habitat you want to search: ");
-                    String habitato = in.nextLine().toLowerCase().trim();
-                    database.associatedByHabitat(habitato);
-                    System.out.println();
-                    bool=true;
-                    break;
-
-                // If selected '10', it will display the detailed info of every registered habitat
-                case "10":
-                    System.out.println();
-                    habitatList.showAllHabitats();
-                    System.out.println();
-                    bool=true;
-                    break;
-
-                // If selected '11', it will export the current data on the database into a CSV file
+                // If selected '11', it will remove a species with a certain scientific name
                 case "11":
+                    System.out.print("\nWrite down the ID of the habitat you want to remove:");
+                    String id = in.nextLine().trim().toLowerCase();
+                    if(habitatList.verifyButInBoolean(id)==true){
+                        habitatList.removeHabitat(id);
+                        System.out.println("Habitat removed successfully.");
+                        System.out.println();
+                    }
+                    else{
+                        System.out.println("There were no habitats found with that name in the database.");
+                        System.out.println();
+                    }
+                    bool=true;
+                    break;
+                
+                // If selected '12', it will export the current Species data on the database into a CSV file
+                case "12":
                     System.out.println();  
                     database.exportCSV();
                     System.out.println();
                     bool=true;
                     break;
 
-                // If selected '12', it will exit the program
-                case "12":
+                // If selected '13', it will export the current Habitats data on the database into a CSV file
+                case "13":
+                    System.out.println();  
+                    habitatList.exportCSV();
+                    System.out.println();
+                    bool=true;
+                    break;
+
+                // If selected '14', it will exit the program
+                case "14":
                     bool=false;
                     break;
                 // If any other keyword was selected, the interface will ask you again for a vaid option
@@ -218,9 +276,6 @@ public class Main{
                     System.out.println("-------------------------------------------------------------");
                     bool=true;
             }
-
-        }
-
-        
+        }   
     }
 }

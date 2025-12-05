@@ -17,32 +17,33 @@ public class BiologicalDataBase {
     // Insert a new species into the database
     public void insertSpecies(Species species){
         database.add(species);
-        System.out.println("\nSpecies added sucessfully.");
+        System.out.println("\nSpecies added sucessfully.\n");
     }
 
     // Check if a certain species is in the database by it's scientific name
-    public void verifyByScientificName(String sName){
-        String nName = sName.trim().toLowerCase();
-        if(verifyButInBoolean(nName)==true){
+    public void verifyByID(String id){
+        String ID = id.trim().toLowerCase();
+        if(verifyButInBoolean(ID)==true){
             System.out.println("This species is in the database.");
         }
         else{
-            System.out.println("Species not found.");
+            System.out.println("Species not found.\n");
         }
     }
 
     // Get the detailed information of a species based on it's scientific name
-    public void obtainDetailedInfo(String sName){
-        String nName = sName.trim().toLowerCase();
-        if(verifyButInBoolean(nName)==true){
-            for(Species i: database){
+    public void obtainDetailedInfo(String id){
+        Iterator<Species> it = database.iterator();
+        while(it.hasNext()){
+            Species i = it.next();
+            if(i.getSpeciesID().equals(id)){
                 i.display();
+                return;
+            }
+            else{
+                System.out.println("Species not found.\n");
             }
         }
-        else{
-            System.out.println("Species not found.");
-        }
-
     }
 
     // Display every species present in the database and their respective information
@@ -54,7 +55,7 @@ public class BiologicalDataBase {
             }
         }
         else{
-            System.out.println("The database is empty.");
+            System.out.println("The Species database is empty.\n");
         }
     }
 
@@ -66,14 +67,16 @@ public class BiologicalDataBase {
                 total+=1;
             }
         }
-        System.out.println("There are a total of "+total+" species from the '"+category+"' category in the database.");
+        if(category.trim().isEmpty()) System.out.println("There are a total of "+total+" species from the 'unknown' category in the database.");
+
+        else System.out.println("There are a total of "+total+" species from the '"+category+"' category in the database.");
     }
 
     // Display the genetic variety indide the database 
     // It will be based on the genetic characteristics of the species
     public void totalGeneticDiversity(){
         if(database.isEmpty()) {
-            System.out.println("The database is empty.");
+            System.out.println("The Species database is empty.");
             return;
         }
         HashSet<GenChar> genSet = new HashSet<GenChar>();
@@ -81,7 +84,7 @@ public class BiologicalDataBase {
             GenChar g = i.getGenChar();
             if(g!=null) genSet.add(g);
         }
-        System.out.println("We find "+genSet.size()+" different genetic characteristic(s) in the database.");
+        System.out.println("We found "+genSet.size()+" different genetic characteristic(s) in the database.");
     }
 
     // Display every species from a specific habitat
@@ -111,33 +114,39 @@ public class BiologicalDataBase {
     }
 
     // Return if a certain species is currently in the database
-    public boolean verifyButInBoolean(String sName){
-        return database.stream().filter(o->o.getScientificName().equals(sName)).findFirst().isPresent();
+    public boolean verifyButInBoolean(String id){
+        return database.stream().filter(o->o.getSpeciesID().equals(id)).findFirst().isPresent();
     }
 
     // Remove a species from the database 
     // It will search by it's scientific name
-    public void removeSpecies(String sName){
+    public void removeSpecies(String id){
         Iterator<Species> it = database.iterator();
         while(it.hasNext()){
             Species i = it.next();
-            if(i.getScientificName().equals(sName)){
+            if(i.getSpeciesID().equals(id)){
                 it.remove();
                 return;
             }
         }
-    } 
+    }
+
+    // Check if a Species ID is present in the database
+    public boolean checkSpeciesID(String id){
+        return database.stream().filter(o->o.getSpeciesID().equals(id)).findFirst().isPresent();
+    }
     
     // Export the current data of the database into a CSV file
     public void exportCSV(){
         File folder = new File("JavaBioDBcsv");
         folder.mkdirs();
-        File csvFile = new File(uniquify(folder+"/JavaBioDB.csv"));
+        File csvFile = new File(uniquify(folder+"/SpeciesJavaBioDB.csv"));
         try(FileWriter writer = new FileWriter(csvFile)){
-            writer.write("ScientificName,CommonName,Category,ConservationStatus,RecentSightings,HabitatName,Location,Description,Locomotion,Diet,BodyCover,Reproduction\n");
+            writer.write("ID,ScientificName,CommonName,Category,ConservationStatus,RecentSightings,HabitatName,Location,Description,Locomotion,Diet,BodyCover,Reproduction\n");
 
             for(Species s: database){
                 writer.write(
+                escape(s.getSpeciesID()) + "," +
                 escape(s.getScientificName()) + "," + 
                 escape(s.getCommonName()) + "," + 
                 escape(s.getCategory().name()) + "," + 

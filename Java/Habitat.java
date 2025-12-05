@@ -4,12 +4,14 @@ public class Habitat{
     public enum HabitatName{tundra, grassland, desert, forest, mountain, freshwater, marine, coastal, wetland, rainforest, cave, urban, agricultural, savanna, soil, host, unknown}
 
     // Create the variables for the parameters
+    private String habitatID;
     private HabitatName habitatName; 
     private String location;
     private String description;
 
     // Create a new object for the Habitat
     public Habitat(Builder builder){
+        this.habitatID=builder.habitatID;
         this.habitatName=builder.habitatName;
         this.description=builder.description;
         this.location=builder.location;
@@ -18,9 +20,16 @@ public class Habitat{
     // Create a private constructor to create instances of Habitat
     // If the values are null, empty values or none of the required if it's the case, it will return a deafult value
     public static class Builder{
+        private String habitatID = " ";
         private HabitatName habitatName = HabitatName.unknown;
         private String location = "unknown";
         private String description = "no description found.";
+
+        public Builder habitatID(String id){
+            if(id==null | id.isEmpty()) this.habitatID=id;
+            else this.habitatID=id;
+            return this;
+        }
 
         public Builder habitatName(HabitatName hn){
             if(hn!=null) this.habitatName=hn;
@@ -48,6 +57,14 @@ public class Habitat{
     }
 
     // Create getters to return the values and setters to set values or change them with others
+    public String getHabitatID(){
+        return habitatID;
+    }
+    public void setHabitatId(String id){
+        if(id.isEmpty()) this.habitatID=" ";
+        else this.habitatID=id;
+    }
+
     public HabitatName getHabitatName(){
         return habitatName;
     }
@@ -85,6 +102,7 @@ public class Habitat{
     // Display the habitat info
     public void display(){
         System.out.println();
+        System.out.println("ID: "+getHabitatID());
         System.out.println("Habitat Name: "+getHabitatName());
         System.out.println("Location: "+getLocation());
         System.out.println("Description: "+getHabitatDescription());

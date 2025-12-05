@@ -5,6 +5,7 @@ public class Species{
     public enum ConservationStatus{extinct, endangered, vulnerable, safe, unknown}
 
     // Create the variables for the parameters
+    private String speciesID;
     private String scientificName;
     private String commonName; 
     private ConservationStatus conservationStatus;
@@ -15,6 +16,7 @@ public class Species{
 
     // Create a class object for the Species
     public Species(Builder builder){
+        this.speciesID=builder.speciesID;
         this.scientificName=builder.scientificName;
         this.commonName=builder.commonName;
         this.conservationStatus=builder.conservationStatus;
@@ -27,13 +29,20 @@ public class Species{
     // Create a private constructor to create instances of Species
     // If the values are null, empty values or none of the required if it's the case, it will return a deafult value
     public static class Builder{
+        private String speciesID=" ";
         private String scientificName=" ";
-        private String commonName=""; 
+        private String commonName="unknown"; 
         private ConservationStatus conservationStatus=ConservationStatus.unknown;
         private Category category=Category.unknown;
         private String recentSightings="No information about any recent sightings";
         private Habitat habitat;
         private GenChar genChar;
+
+        public Builder speciesID(String id){
+            if(id.isEmpty()) this.speciesID=" ";
+            else this.speciesID=id;
+            return this;
+        }
 
         public Builder scientificName(String sName){
             if(sName.isEmpty()) this.scientificName=" ";
@@ -42,7 +51,7 @@ public class Species{
         }
 
         public Builder commonName(String cName){
-            if(cName.isEmpty()) this.commonName="";
+            if(cName.isEmpty()) this.commonName="unknown";
             else this.commonName=cName;
             return this;
         }
@@ -82,11 +91,19 @@ public class Species{
     }
 
     // Create getters to return the values and setters to set values or change them with others
+    public String getSpeciesID(){
+        return speciesID;
+    }
+    public void setSpeciesID(String id){
+        if(id.isEmpty()) this.speciesID=" ";
+        else this.speciesID=id;
+    }
+
     public String getCommonName(){
         return commonName;
     }
     public void setCommonName(String name){
-        if(name.isEmpty()) this.commonName="";
+        if(name.isEmpty()) this.commonName="unknown";
         else this.commonName=name;
     }
 
@@ -156,6 +173,7 @@ public class Species{
     // Display all the information of a certain species
     public void display(){
         System.out.println();
+        System.out.println("ID: "+getSpeciesID());
         System.out.println("Scientific Name: "+getScientificName());
         System.out.println("Common Name: "+getCommonName());
         System.out.println("Category: "+getCategory());
