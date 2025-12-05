@@ -95,7 +95,7 @@ public class Species{
         return speciesID;
     }
     public void setSpeciesID(String id){
-        if(id.isEmpty()) this.speciesID=" ";
+        if(id==null || id.isEmpty()) this.speciesID=" ";
         else this.speciesID=id;
     }
 
@@ -103,7 +103,7 @@ public class Species{
         return commonName;
     }
     public void setCommonName(String name){
-        if(name.isEmpty()) this.commonName="unknown";
+        if(name==null || name.isEmpty()) this.commonName="unknown";
         else this.commonName=name;
     }
 
@@ -111,7 +111,7 @@ public class Species{
         return scientificName;
     }
     public void setScientificName(String name){
-        if(name.isEmpty()) this.scientificName=" ";
+        if(name==null || name.isEmpty()) this.scientificName=" ";
         else this.scientificName=name;
     }
 
@@ -142,7 +142,7 @@ public class Species{
         return recentSightings;
     }
     public void setRecentSightings(String rSights){
-        if(rSights.isEmpty()) this.recentSightings="No information about any recent sightings";
+        if(rSights==null || rSights.isEmpty()) this.recentSightings="No information about any recent sightings";
         else this.recentSightings=rSights;
     }
 
