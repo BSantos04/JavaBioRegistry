@@ -58,14 +58,5 @@ What do you wanna do?
 Write the number of the activity you want to do:
 ```
 
-### Example
-```
-docker cp javabd:/javabiodb/JavaBioDBcsv/ .
-```
-After extracting the files, you can remove the container safely:
-```
-docker rm javabd
-```
-
 ## License
 GNU General Public License V3.0
