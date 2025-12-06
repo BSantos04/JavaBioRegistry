@@ -178,12 +178,13 @@ public class BiologicalDataBase {
         return s;
     }
 
-    // Loads the previously stored data about the Species into the 'database'
+
     public void loadCSV(){
         File csvFile = new File("data/SpeciesJavaBioDB.csv");
         if(!csvFile.exists()){
             return;
         }
+
         try(BufferedReader br = new BufferedReader(new FileReader(csvFile))){
                 String line = br.readLine();
                 while((line = br.readLine())!=null){

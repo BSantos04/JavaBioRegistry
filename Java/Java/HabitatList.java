@@ -86,12 +86,12 @@ public class HabitatList {
         return s;
     } 
 
-    // Loads the previously stored data about the Habitats into the 'database'
     public void loadCSV(){
     File csvFile = new File("data/HabitatJavaBioDB.csv");
     if(!csvFile.exists()){
         return;
     }
+
     try(BufferedReader br = new BufferedReader(new FileReader(csvFile))){
             String line = br.readLine();
             while((line = br.readLine())!=null){
