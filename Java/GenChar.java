@@ -1,5 +1,7 @@
+import java.io.Serializable;
+
 // Create a class object for the Genetic Characteristics
-public class GenChar {
+public class GenChar implements Serializable{
     // Create the enums with fixed values for the GenChar parameters
     public enum Locomotion {biped, quadruped, flying, aquatic, serpentine, cilia, flagella, pseudopods, na, unknown}
     public enum Diet {carnivore, herbivore, omnivore, insectivore, scavenger, fishivore, autotroph, heterotroph, unknown}

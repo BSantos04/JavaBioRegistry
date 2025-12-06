@@ -1,19 +1,20 @@
 import java.util.Scanner;
+import java.io.*;
 import java.util.Random;
 
 // Create the main class to orchestrate the whole process
-public class Main{
+public class Main implements Serializable{
     public static void main(String[] args){
         // Create a Scanner instance to input values
         Scanner in = new Scanner(System.in);
 
         // Create a database instance and load the stored data if exists
         BiologicalDataBase database = new BiologicalDataBase();
-        database.loadCSV();
+        database.loadDat();
 
         // Create a habitat list instance to store the registered habitats and load the stored data if exists
         HabitatList habitatList = new HabitatList();
-        habitatList.loadCSV();
+        habitatList.loadDat();
 
         // Define boolean variable for the interface loop
         boolean bool=true;
@@ -270,8 +271,8 @@ public class Main{
                 
                 // If selected '12', it will export the current Species and Habitats data on the database CSV files and exit the program
                 case "12":
-                    database.exportCSV();
-                    habitatList.exportCSV();
+                    database.saveDat();
+                    habitatList.saveDat();
                     bool=false;
                     break;
 

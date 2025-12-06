@@ -1,19 +1,13 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
 // Create a class object to store all registered habitats
-public class HabitatList { 
-    private HashSet<Habitat> habitatList;
-
-    // Create the function to store the habitats inside a list
-    public HabitatList(){
-        habitatList=new HashSet<Habitat>();
-    }
+public class HabitatList implements Serializable{
+    // Define class version and ArrayList object to store Habitats
+    private static final long serialVersionUID = 1L;
+    private HashSet<Habitat> habitatList = new HashSet<>();
 
     // Add a new habitat to the list
     public void addHabitat(Habitat habitat){
@@ -56,64 +50,36 @@ public class HabitatList {
         return habitatList.stream().filter(o->o.getHabitatID().equals(id)).findFirst().isPresent();
     }
 
-    // Export the current data of the database into a CSV file
-    public void exportCSV(){
-        File folder = new File("data");
-        folder.mkdirs();
-        File csvFile = new File(folder+"/HabitatJavaBioDB.csv");
-        try(FileWriter writer = new FileWriter(csvFile)){
-            writer.write("HabitatID,HabitatName,HabitatLocation,HabitatDescription\n");
+    // Export the current data of the database into a .dat file
+    public void saveDat(){
+        try{
+            File folder = new File("data");
+            folder.mkdirs();
 
-            for(Habitat h: habitatList){
-                writer.write(
-                    escape(h.getHabitatID()) + "," +
-                    escape(h.getHabitatName().name()) + "," + 
-                    escape(h.getLocation()) + "," + 
-                    escape(h.getHabitatDescription()) + "\n");
-            }
-        }
-        catch(IOException e) {
-            System.out.println("Error writing CSV: " + e.getMessage());
+            FileOutputStream fos = new FileOutputStream("data/HabitatBioReg.dat");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+
+            oos.writeObject(habitatList);
+            oos.close();
+        }catch(Exception e){
+            System.out.println("Error saving DAT file: "+e.getMessage());
         }
     }
 
-    // Helper function to put quotation marks on values with commas
-    public String escape(String s){
-        if(s.contains(",") || s.contains("\"") || s.contains("\n")) {
-            s = s.replace("\"", "\"\"");
-            return "\"" + s + "\"";
+    // Loads the .dat file containing the Species data form previous usage of the software
+    public void loadDat(){
+        File f = new File("data/HabitatBioReg.dat");
+        if(!f.exists()){
+            return;
         }
-        return s;
-    } 
 
-    // Loads the previously stored data about the Habitats into the 'database'
-    public void loadCSV(){
-    File csvFile = new File("data/HabitatJavaBioDB.csv");
-    if(!csvFile.exists()){
-        return;
-    }
-    try(BufferedReader br = new BufferedReader(new FileReader(csvFile))){
-            String line = br.readLine();
-            while((line = br.readLine())!=null){
-                String[] p = line.split(",", -1);
-                if(p.length<4) continue;
+        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))){
 
-                String habitatID = p[0];
-                Habitat.HabitatName habitatName = Habitat.parseHabitatName(p[1]);
-                String habitatLocation = p[2];
-                String habitatDescription = p[3];
+            habitatList = (HashSet<Habitat>) ois.readObject();
 
-                Habitat habitat = new Habitat.Builder()
-                        .habitatID(habitatID)
-                        .habitatName(habitatName)
-                        .location(habitatLocation)
-                        .description(habitatDescription)
-                        .build();
-                
-                habitatList.add(habitat);
-            }
-        } catch(IOException e){
-            System.out.println("Error loading data: "+e.getMessage());
+            ois.close();
+        }catch (IOException | ClassNotFoundException e){
+            System.out.println("Error loading DAT file: "+e.getMessage());
         }
     }
 }

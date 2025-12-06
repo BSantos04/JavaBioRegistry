@@ -1,5 +1,7 @@
+import java.io.Serializable;
+
 // Create a class for all Habitat-related functions and variables
-public class Habitat{
+public class Habitat implements Serializable{
     // Create an enum to fix the accepted values for the habitat name
     public enum HabitatName{tundra, grassland, desert, forest, mountain, freshwater, marine, coastal, wetland, rainforest, cave, urban, agricultural, savanna, soil, host, unknown}
 

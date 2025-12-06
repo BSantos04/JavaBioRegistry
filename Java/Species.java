@@ -1,5 +1,7 @@
+import java.io.Serializable;
+
 // Create a class for all Species-related functions and variables
-public class Species{
+public class Species implements Serializable{
     // Create the enums with fixed values for the GenChar parameters
     public enum Category{mammal, bird, reptile, amphibian, fish, insect, arachnid, crustacean, mollusk, annelid, echinoderm, plant, fungus, algae, protist, bacterium, archaeon, virus, unknown}
     public enum ConservationStatus{extinct, endangered, vulnerable, safe, unknown}

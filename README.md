@@ -31,11 +31,11 @@ docker build -t jbd .
 
 Now that you have a Docker image, run the following command:
 ```
-docker run --name {container name} -it {image name}
+docker run -it -v $(pwd)/data:/javabioreg/data {image name}
 ```
 ### Example
 ``` 
-docker run --name javabd -it jbd
+docker run -it -v $(pwd)/data:/javabioreg/data jbd
 ```
 
 The usage of the rest of the software will be quite self-explanatory:
@@ -45,22 +45,17 @@ Oh, hi there.
 What do you wanna do?
 -Add a species to the database (1);
 -Add an habitat to the database (2);
--Verify if a species exists in the database by scientific name (3);
--See the number of species from a specific category (4)
+-Verify if a species exists in the database (3);
+-Show the number of species from a specific category (4)
 -Show the registered species (5);
 -Show the total genetic diversity of the database (6);
--Remove species by scientifc name (7) ;
--Get the detailed informations of a species by scientific name (8);
--Show all the species associated with the same habitat (9);
--Show all registered habitats (10);
--Export CSV file with all registered species (11).
+-Show the detailed informations of a species (7);
+-Show all the species associated with the same habitat (8);
+-Show all registered habitats (9);
+-Remove species (10) ;
+-Remove habitat (11) ;
 -Exit (12).
 Write the number of the activity you want to do:
-```
-
-After using the software, in order to get the exported CSV files, run the following command:
-```
-docker cp {container name}:/javabiodb/JavaBioDBcsv/ .
 ```
 
 ### Example
