@@ -1,4 +1,4 @@
-# JavaBioDB
+# JavaBioRegistry
 
 ## Description
 
